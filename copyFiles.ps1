@@ -134,7 +134,7 @@ function SendMail {
     $emailSmtpServer = "mail.gestservi.com.br"
     $emailSmtpServerPort = "587"
     $emailSmtpUser = "backup@gestservi.com.br"
-    $emailSmtpPass = "GEst@3627BAup*"
+    $emailSmtpPass = "bla"
 
     $emailMessage = New-Object System.Net.Mail.MailMessage
     $emailMessage.From = "BackupGestServi<backup@gestservi.com.br>"
