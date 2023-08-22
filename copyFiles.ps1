@@ -1,6 +1,5 @@
 function main {
-    $serverNames = @("ad-server","ng-server","servidor-gestse")
-    $logsToSend = "";
+    $serverNames = @("ad-server","ng-server","servidor-gestse")    
     $ObjectToSendMail = [ObjectToSend]::new()
    
     try 
@@ -12,8 +11,7 @@ function main {
             $ObjectToSendMail.eventLog = $($resultObject.logMessages)
             $ObjectToSendMail.hasError = $($resultObject.hasError)
 
-            SendMail -serverName $currentServerName -ObjectToSendMail $ObjectToSendMail 
-            
+            SendMail -serverName $currentServerName -ObjectToSendMail $ObjectToSendMail             
 
             $resultObject = $null
             $ObjectToSendMail.logToSystem = $null
@@ -113,18 +111,18 @@ function SendMail {
         [ObjectToSend] $ObjectToSendMail
     )    
   
-    $conclusao ="sucesso"
+    $conclusao ="Todos Backups de ontem Funcionaram com sucesso!"
     if($ObjectToSendMail.hasError){
-        $conclusao = "problema"
+        $conclusao = "Algum Backup ontem reportou erro"
     }
 
-    if ($ObjectToSendMail.eventLog -ne  $null -and $ObjectToSendMail.eventLog.Count -gt 0) {
+    if ($null -ne $ObjectToSendMail.eventLog -and $ObjectToSendMail.eventLog.Count -gt 0) {
         for ($i = 0; $i -lt $ObjectToSendMail.eventLog.Count; $i++) {
             $ObjectToSendMail.eventLog[$i] = "<li><span class=`"bullet`"></span>" + $ObjectToSendMail.eventLog[$i] + "</li><br>"
         }
     }
 
-    if ($ObjectToSendMail.logToSystem -ne  $null -and $ObjectToSendMail.logToSystem.Count -gt 0) {
+    if ($null -ne $ObjectToSendMail.logToSystem -and $ObjectToSendMail.logToSystem.Count -gt 0) {
         for ($i = 0; $i -lt $ObjectToSendMail.logToSystem.Count; $i++) {
             $ObjectToSendMail.logToSystem[$i] = "<li><span class=`"bullet`"></span>" + $ObjectToSendMail.logToSystem[$i] + "</li><br>"
         }        
@@ -134,12 +132,12 @@ function SendMail {
     $emailSmtpServer = "mail.gestservi.com.br"
     $emailSmtpServerPort = "587"
     $emailSmtpUser = "backup@gestservi.com.br"
-    $emailSmtpPass = "bla"
+    $emailSmtpPass = "GEst@3627BAup*"
 
     $emailMessage = New-Object System.Net.Mail.MailMessage
     $emailMessage.From = "BackupGestServi<backup@gestservi.com.br>"
     $emailMessage.To.Add( "backup@gestservi.com.br" )
-    $emailMessage.Subject = "Backup com "+$conclusao+" no servidor " +$serverName 
+    $emailMessage.Subject = "Backup com do servidor " +$serverName 
     $emailMessage.IsBodyHtml = $true
     $emailMessage.Body = 
     " <style>
@@ -159,7 +157,9 @@ function SendMail {
         }
     </style>    
     <ul>
-    <h2>Dados do Evento</h2>
+        <h1>Dados do Evento</h1>
+    <br>
+        <h3> " +$conclusao + "</h3>
     <br>
     " + $ObjectToSendMail.eventLog + "
     <br>
