@@ -32,8 +32,15 @@ function CopyFile {
         [string] $serverName
     )
     $result = [ObjectToSend]::new()
+
     $logPathRemote = "\\" + $serverName + "\c$\Windows\System32\winevt\Logs\Microsoft-Windows-Backup.evtx"
     $localCopyPath = "C:\WinServBackup_Monitor\" + $serverName + "\Microsoft-Windows-Backup.evtx"
+
+    # Verifica se a pasta existe
+    if (-not (Test-Path -Path $localCopyPath)) {
+        # Cria a pasta se ela não existir
+        New-Item -Path $localCopyPath -ItemType Directory
+    }
 
     $maxRetries = 3
     $retryDelaySeconds = 5  # 1 minuto em segundos
